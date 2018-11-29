@@ -6,9 +6,9 @@ import csv
 import copy
 
 class Tournament():
-　　　　"""
-　　　　1つのトーナメントは、Tournamentクラスのインスタンスを作ることで管理される。
-　　　　"""
+    """
+    1つのトーナメントは、Tournamentクラスのインスタンスを作ることで管理される。
+    """
 
     def __init__(self):
         #Playerクラスの順序付きタプル。
