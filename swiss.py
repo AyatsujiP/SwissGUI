@@ -101,19 +101,3 @@ if __name__ == "__main__":
 
     # round 1
     tn.show_pairing()
-    tn.report_result(white_name="yukari", white_result=1, black_name="shiki", black_result=0)
-    tn.report_result(white_name="shiho", white_result=1, black_name="antilles", black_result=0)
-    tn.report_result(white_name="kanade", white_result=0, black_name="honoka", black_result=1)
-
-    tn.update_round()
-
-    #round 2
-    tn.show_pairing()
-    tn.report_result(white_name="shiho", white_result=1, black_name="naho", black_result=0)
-    tn.report_result(white_name="yukari", white_result=0.5, black_name="honoka", black_result=0.5)
-    tn.report_result(white_name="kanade", white_result=0, black_name="shiki", black_result=1)
-
-    tn.update_round()
-
-    #round 3
-    tn.show_pairing()
