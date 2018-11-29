@@ -6,18 +6,28 @@ import csv
 import copy
 
 class Tournament():
+　　　　"""
+　　　　1つのトーナメントは、Tournamentクラスのインスタンスを作ることで管理される。
+　　　　"""
 
     def __init__(self):
+        #Playerクラスの順序付きタプル。
         self.player_class_tuple = None
+        #現在のラウンド数を、状態として持っている。
         self.round = 1
+        #エンジン
         self.engine = DutchPairingEngine()
+        #ペアリングナンバーと、プレーヤー名の辞書。Playerクラスのタプルだと検索が難しいため作っておく。
         self.pairing_nos = {}
+        #現在のラウンド数におけるペアリング。
         self.current_pairing = None
-
+        #「現在のラウンド」ですでに終了した結果をプールしておくための変数。
         self.pooled_results ={}
 
 
     def _read_from_csv(self, filename):
+        #CSVファイルから、プレーヤーリストを読み込む。
+        #プレーヤーリストは、レーティング順に並べておくこと。
         ret = []
         with open(filename, "r") as f:
             reader = csv.reader(f,delimiter=",", lineterminator="\n")
@@ -28,6 +38,7 @@ class Tournament():
 
 
     def create_initial_players(self, filename):
+        #読み込んだプレーヤーリストから、swissdutchライブラリに取り込み可能なように、タプルを作成する。
         player_list = self._read_from_csv(filename)
         player_class_list = []
         for i, pl in enumerate(player_list):
@@ -44,10 +55,11 @@ class Tournament():
 
 
     def show_pairing(self):
+        #ペアリングを組む。
         self.current_pairing = self.engine.pair_round(self.round, self.player_class_tuple)
-
+        #ペアリングを表示する。「白番-黒番」で表示し、Byeは個別に表示する。
         pairing_string = "------Round %d------\n\n" % self.round
-
+        
         for cp in self.current_pairing:
             #print (cp.colour_hist[-1])
             if cp.colour_hist[-1] is Colour.white:
@@ -60,6 +72,8 @@ class Tournament():
 
     def report_result(self, *,
             white_name, white_result, black_name, black_result):
+        #結果を、関数の引数として投入する。「白の名前」「白の結果(0,0.5,1)」「黒の名前」「黒の結果」の順。
+        #結果は、pooled_resultsにプールされる。
         result_dict = {"white_name": white_name,
                         "white_result": white_result,
                         "black_name": black_name,
@@ -68,9 +82,12 @@ class Tournament():
         self.pooled_results[black_name] = black_result
 
     def update_round(self):
+        #プールされた結果を用いて、次のペアリングを生成する。
         update_player_class_list = []
+        #現在のラウンドの結果を反映したPlayerクラスのインスタンスを、プレーヤーの数ぶんだけ生成する。
         for cp in self.current_pairing:
             if cp.colour_hist[-1] is Colour.none:
+                #Byeの場合
                 up = Player(name=cp.name,
                         rating=cp.rating,
                         pairing_no = cp.pairing_no,
@@ -80,6 +97,7 @@ class Tournament():
                         colour_hist = cp.colour_hist)
                 print(up)
             else:
+                #Bye以外の場合
                 up = Player(name=cp.name,
                         rating=cp.rating,
                         pairing_no = cp.pairing_no,
@@ -89,7 +107,7 @@ class Tournament():
                         colour_hist = cp.colour_hist)
                 print(up)
             update_player_class_list.append(up)
-
+        #タプルに変換し、ラウンドのカウントを1つ増やす。
         self.player_class_tuple = tuple(update_player_class_list)
         self.pooled_results = {}
         self.round += 1
