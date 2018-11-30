@@ -1,3 +1,4 @@
 .pydev
 .pydevproject
 .project
+*/__init__.py
