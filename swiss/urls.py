@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from swiss_gui import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'swiss_gui/$', views.index,name='index'),
+    url(r'swiss_gui/create_tournament/', views.create_tournament,name='create_tournament')
 ]
