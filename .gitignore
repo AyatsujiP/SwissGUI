@@ -2,3 +2,5 @@
 .pydevproject
 .project
 */__init__.py
+*/*.pyc
+*/__pycache__/*
