@@ -95,36 +95,43 @@ def show_pairing():
         
         q.save()
     
-    #デバッグ用
-    pairing_string = "------Round %d------\n\n" % round_no
-        
-    for cp in current_pairing:
-        if cp.colour_hist[-1] is Colour.white:
-            pairing_string += "No.%s\t%s - No.%s\t%s\n" % (cp.pairing_no,cp.name,
-                                                         cp.opponents[-1],player_class_dict[cp.opponents[-1]])
-        elif cp.colour_hist[-1] is Colour.none:
-            pairing_string += "No.%s\t%s - Bye\n"% (cp.pairing_no,cp.name)
-    print(pairing_string)
-    #ここまで
-
-
 def report_result(name, result):
     #名前と結果を投入する
-    q = CurrentRoundPlayerList.objects.filter(name = name).get()
-    q.score += result
-    q.save()
+    if len(CurrentRoundPlayerList.objects.filter(name = name)) is not 0:    
+        q = CurrentRoundPlayerList.objects.filter(name = name).get()
+        q.score += result
+        q.save()
+        q = PooledResults(name=name,result=result)
+        q.save()
+        
+        return 0
+    else:
+        return 1
+    
+def report_results(white_name, white_result, black_name, black_result):
+    #エラーチェック。白の結果が入っていないときに黒の結果を入れないようにする
+    if report_result(white_name, white_result) is 0:
+        if report_result(black_name, black_result) is 0:
+            message = "Result Successfully updated!"
+        else:
+            message = "Result Update Failed"
+    else:
+        message = "Result Update Failed"
+    
+    return {"message":message}
 
 #次ラウンド移行時に呼ばれる
 def update_round():
     round = Round.objects.get()
     round.round_no += 1
+    PooledResults.objects.all().delete()
     round.save()
 
 
 if __name__ == "__main__":
     create_initial_players()
     show_pairing()
-    report_result('Shiki',1)
+    """report_result('Shiki',1)
     report_result('Kanade',0)
     report_result('Frederica',1)
     report_result('Mika',0)
@@ -133,4 +140,4 @@ if __name__ == "__main__":
     report_result('Nao',1)
     report_result('Karen',0)
     update_round()
-    show_pairing()
+    show_pairing()"""

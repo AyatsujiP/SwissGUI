@@ -6,33 +6,37 @@
 			<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
 
 			<h2 class="ui header">
-				Create New Tournament:</p>
+				Round {{round}}:</p>
 			</h2>
 			<div class="ui segment">
-				<h3 class="ui header">Player Current List:</h3>
+				<h3 class="ui header">Pairing:</h3>
 			<table class="ui celled table">
 				<thead>
 					<tr>
 						<th>player ID</th>
-						<th>name</th>
-						<th>rating</th>
+						<th>White</th>
+						<th></th>
+						<th>Score</th>
+						<th></th>
+						<th>Player ID</th>
+						<th>Black</th>
 					</tr>
 				</thead>
+				
 				<tbody>
-					{%for pl in player_list %}
+					{%for pl in pairing_list %}
 						<tr>
-							<td data-label="player ID">{{pl.0}}</td>
-							<td data-label="name">{{pl.1}}</td>
-							<td data-label="rating">{{pl.2}}</td>
+							<td data-label="white_player ID">{{pl.white_no}}</td>
+							<td data-label="white_name">{{pl.white_name}}</td>
+							<td data-label="white_name">{{pl.white_score}}</td>
+							<td></td>
+							<td data-label="white_name">{{pl.black_score}}</td>
+							<td data-label="black_name">{{pl.black_no}}</td>
+							<td data-label="black_name">{{pl.black_name}}</td>
 						</tr>
 					{%endfor%}
 				</tbody>
 			</table>
-			</div>
-			<div class="ui center aligned text container" onclick="location.href='/swiss_gui/start_tournament'">
-				<button class="ui primary button">
-					Start Tournament
-				</button>
 			</div>
 		</div>
 	</body>

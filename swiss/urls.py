@@ -20,5 +20,9 @@ from swiss_gui import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'swiss_gui/$', views.index,name='index'),
-    url(r'swiss_gui/create_tournament/', views.create_tournament,name='create_tournament')
+    url(r'swiss_gui/create_tournament/', views.create_tournament,name='create_tournament'),
+    url(r'swiss_gui/start_tournament/', views.start_tournament,name='start_tournament'),
+    url(r'swiss_gui/show_pairing_page/', views.show_pairing_page,name='show_pairing_page'),
+    url(r'swiss_gui/show_report_page/', views.show_report_page,name='show_report_page'),
+    url(r'swiss_gui/submit_result/', views.submit_result,name='submit_result'),
 ]
