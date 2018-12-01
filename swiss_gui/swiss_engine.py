@@ -14,7 +14,7 @@ import copy
 import sys
 from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults
 
-
+#トーナメント開始時に呼ばれる
 def create_initial_players():
     #プレーヤーリストを、swiss_gui_participatedplayerlistテーブルに登録する。
     players = InitialPlayerList.objects.order_by('rating').reverse().all()
@@ -48,7 +48,7 @@ def create_initial_players():
     
     return
 
-
+#次ラウンド開始時に呼ばれる
 def show_pairing():
     engine = DutchPairingEngine()
     #現在のラウンド数を取得する
@@ -114,7 +114,7 @@ def report_result(name, result):
     q.score += result
     q.save()
 
-
+#次ラウンド移行時に呼ばれる
 def update_round():
     round = Round.objects.get()
     round.round_no += 1
