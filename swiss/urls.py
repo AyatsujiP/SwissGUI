@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'swiss_gui/show_pairing_page/', views.show_pairing_page,name='show_pairing_page'),
     url(r'swiss_gui/show_report_page/', views.show_report_page,name='show_report_page'),
     url(r'swiss_gui/submit_result/', views.submit_result,name='submit_result'),
+    url(r'swiss_gui/next_round/', views.next_round,name='next_round'),
 ]

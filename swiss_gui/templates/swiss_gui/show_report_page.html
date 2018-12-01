@@ -7,6 +7,12 @@
 		{% csrf_token %}
 			<div class="ui text container">
 				<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+
+				<div class="ui three item menu">
+	  				<a class="item" href="/swiss_gui/show_pairing_page">Current Pairing</a>
+					<a class="item">Standing</a>
+					<a class="active item" href="/swiss_gui/show_report_page">Report Results</a>
+				</div>
 	
 				<h2 class="ui header">
 					Round {{round}}:</p>

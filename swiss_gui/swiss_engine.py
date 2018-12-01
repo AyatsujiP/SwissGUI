@@ -22,6 +22,7 @@ def create_initial_players():
     #もともと入っていたレコードを消す
     ParticipatedPlayerList.objects.all().delete()
     CurrentRoundPlayerList.objects.all().delete()
+    PooledResults.objects.all().delete()
     Round.objects.all().delete()
     
     #swiss_gui_initialplayerlistテーブルから追加する。
@@ -49,7 +50,7 @@ def create_initial_players():
     return
 
 #次ラウンド開始時に呼ばれる
-def show_pairing():
+def create_pairing():
     engine = DutchPairingEngine()
     #現在のラウンド数を取得する
     round_no = Round.objects.get().round_no
@@ -81,6 +82,7 @@ def show_pairing():
             player_class_list.append(distinct_player)
             player_class_dict[p.pairing_no] = p.name         
         
+        
     player_class_tuple = tuple(player_class_list)
     
     current_pairing = engine.pair_round(round_no, player_class_tuple)
@@ -94,6 +96,11 @@ def show_pairing():
         q.colour_hist = list(cp.colour_hist)
         
         q.save()
+        
+        #Byeのプレーヤーは、PooledResultをこのタイミングで入れておく
+        if cp.colour_hist[-1] is Colour.none:            
+            q = PooledResults(name=cp.name,result=1)
+            q.save()
     
 def report_result(name, result):
     #名前と結果を投入する
@@ -103,7 +110,6 @@ def report_result(name, result):
         q.save()
         q = PooledResults(name=name,result=result)
         q.save()
-        
         return 0
     else:
         return 1
@@ -126,6 +132,8 @@ def update_round():
     round.round_no += 1
     PooledResults.objects.all().delete()
     round.save()
+    
+    return {"round":round.round_no}
 
 
 if __name__ == "__main__":
