@@ -4,6 +4,8 @@ from swissdutch.player import Player
 
 import csv
 import copy
+import sys
+from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults
 
 class Tournament():
     """
