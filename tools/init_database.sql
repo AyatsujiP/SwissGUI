@@ -1,4 +1,4 @@
-insert into swiss_gui_initial_player_list (name, rating) values 
+insert into swiss_gui_initialplayerlist (name, rating) values 
 ('Shiki', 2500),
 ('Karen', 2200),
 ('Frederica', 2000),
