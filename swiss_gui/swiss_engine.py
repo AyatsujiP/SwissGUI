@@ -32,7 +32,8 @@ def create_initial_players():
             rating = player.rating,
             pairing_no = i+1,
             score = 0,
-            float_status = 0
+            float_status = 0,
+            tiebreak_score=0
             )
         q.save()
         q = CurrentRoundPlayerList(
@@ -40,7 +41,8 @@ def create_initial_players():
             rating = player.rating,
             pairing_no = i+1,
             score = 0,
-            float_status = 0
+            float_status = 0,
+            tiebreak_score=0
             )
         q.save()
     
@@ -133,7 +135,22 @@ def update_round():
     PooledResults.objects.all().delete()
     round.save()
     
+    #Buchholz法でのタイブレーク計算
+    for crp in CurrentRoundPlayerList.objects.all():
+        
+        crp.tiebreak_score = tiebreak_sb(crp)
+        crp.save()
+    
     return {"round":round.round_no}
+
+
+def tiebreak_sb(crp):
+    tiebreak = 0
+    opponents = crp.opponents
+    for opponent in opponents:
+        if not opponent is 0:
+            tiebreak += CurrentRoundPlayerList.objects.filter(pairing_no=opponent).get().score
+    return tiebreak
 
 
 if __name__ == "__main__":

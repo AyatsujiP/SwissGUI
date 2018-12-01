@@ -7,7 +7,7 @@
 			
 			<div class="ui three item menu">
   				<a class="active item" href="/swiss_gui/show_pairing_page">Current Pairing</a>
-				<a class="item">Standing</a>
+				<a class="item" href="/swiss_gui/show_standing_page">Standing</a>
 				<a class="item" href="/swiss_gui/show_report_page">Report Results</a>
 			</div>
 
@@ -44,10 +44,20 @@
 				</tbody>
 			</table>
 			</div>
-				<div class="ui right aligned text container" onclick="location.href='/swiss_gui/next_round'">
-					<button class="ui primary button">
-						Go to Next Round
+			<div class="ui right aligned text container" onclick="location.href='/swiss_gui/next_round'">
+				<button class="ui primary button">
+					Go to Next Round
 				</button>
+			</div>
+			<div>
+				<div class="ui text">
+					If all rounds end, please click "End tournament" Button.
+				</div>
+				<div class="ui right aligned text container" onclick="location.href='/swiss_gui/end_tournament'">
+					<button class="ui button">
+						End tournament
+					</button>
+				</div>
 			</div>
 		</div>
 	</body>

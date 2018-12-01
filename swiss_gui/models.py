@@ -14,6 +14,7 @@ class ParticipatedPlayerList(models.Model):
     float_status = models.IntegerField()
     opponents = ArrayField(models.IntegerField(),null=True)
     colour_hist = ArrayField(models.IntegerField(),null=True)
+    tiebreak_score = models.FloatField(null=True)
     
 
 class CurrentRoundPlayerList(models.Model):
@@ -24,6 +25,7 @@ class CurrentRoundPlayerList(models.Model):
     float_status = models.IntegerField()
     opponents = ArrayField(models.IntegerField(),null=True)
     colour_hist = ArrayField(models.IntegerField(),null=True)
+    tiebreak_score = models.FloatField(null=True)
     
 class Round(models.Model):
     round_no = models.IntegerField()

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from swiss_gui.db_controller import fetch_from_initialplayerlist, return_pairing, return_names
+from swiss_gui.db_controller import fetch_from_initialplayerlist, return_pairing, return_names, return_standing
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
 
 # Create your views here.
@@ -35,6 +35,13 @@ def show_pairing_page(request):
     context = return_pairing()
     return HttpResponse(template.render(context,request))  
 
+#現在の順位のページを表示する
+def show_standing_page(request):
+    template = loader.get_template('swiss_gui/show_standing_page.html')
+    #ペアリングを表示
+    context = return_standing()
+    return HttpResponse(template.render(context,request))  
+
 #結果報告ページを表示する
 def show_report_page(request):
     template = loader.get_template('swiss_gui/show_report_page.html')
@@ -56,4 +63,11 @@ def next_round(request):
     template = loader.get_template('swiss_gui/next_round.html')
     context = update_round()
     create_pairing()
+    return HttpResponse(template.render(context,request))
+
+def end_tournament(request):
+    template = loader.get_template('swiss_gui/show_standing_page.html')
+    update_round()
+    context = return_standing()
+    context["round"] = "Finished"
     return HttpResponse(template.render(context,request))

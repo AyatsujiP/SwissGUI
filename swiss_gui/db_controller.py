@@ -64,6 +64,16 @@ def return_pairing():
     return (ret)
 
 
+def return_standing():
+    ret = {"standing":[]}
+    player_standing = CurrentRoundPlayerList.objects.order_by('-score','-tiebreak_score','pairing_no').all()
+    for i,ps in enumerate(player_standing):
+        ret["standing"].append({"ranking":i+1,"name":ps.name,"score":ps.score,"tiebreak_score":ps.tiebreak_score})
+    return ret
+    
+    
+
+
 def return_names():
     return {"names": list(InitialPlayerList.objects.values_list('name',flat=True))}
 
