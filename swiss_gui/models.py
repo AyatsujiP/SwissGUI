@@ -33,3 +33,12 @@ class Round(models.Model):
 class PooledResults(models.Model):
     name = models.CharField(max_length=200)
     result = models.FloatField()
+    
+class ResultsHistory(models.Model):
+    round = models.IntegerField(null=True)
+    white_no = models.IntegerField()
+    white_name = models.CharField(max_length=200)
+    white_result = models.FloatField()
+    black_no = models.IntegerField()
+    black_name = models.CharField(max_length=200)
+    black_result = models.FloatField()

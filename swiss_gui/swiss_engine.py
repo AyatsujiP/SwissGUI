@@ -12,7 +12,7 @@ from swissdutch.player import Player
 import csv
 import copy
 import sys
-from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults
+from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory
 
 from swiss_gui.exception.swiss_exception import SwissException
 
@@ -29,6 +29,7 @@ def create_initial_players():
     CurrentRoundPlayerList.objects.all().delete()
     PooledResults.objects.all().delete()
     Round.objects.all().delete()
+    ResultsHistory.objects.all().delete()
     
     #swiss_gui_initialplayerlistテーブルから追加する。
     for i, player in enumerate(players):
@@ -131,6 +132,18 @@ def report_results(white_name, white_result, black_name, black_result):
     if validate is 0:
         report_result(white_name, white_result)
         report_result(black_name, black_result)
+        
+        #結果をResultsHistoryテーブルに投入する
+        q = ResultsHistory(
+            round = Round.objects.all().get().round_no,
+            white_no = ParticipatedPlayerList.objects.filter(name=white_name).get().pairing_no,
+            white_name = white_name,
+            white_result = white_result,
+            black_no = ParticipatedPlayerList.objects.filter(name=black_name).get().pairing_no,
+            black_name = black_name,
+            black_result = black_result  
+            )
+        q.save()
         message = "Result Successfully updated!"
     else:
         message = "Result Update Failed"

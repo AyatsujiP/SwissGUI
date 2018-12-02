@@ -6,7 +6,7 @@ import django
 django.setup()
 
 from swissdutch.constants import FideTitle, Colour, FloatStatus
-from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults
+from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory
 
 
 def fetch_from_initialplayerlist():
@@ -72,6 +72,24 @@ def return_standing():
     return ret
     
     
+def return_history():
+    ret = {"history":[]}
+    current_round = Round.objects.all().get().round_no
+    for i in range(0,current_round-1):
+        round_results = []
+        round = i+1
+        round_histories = ResultsHistory.objects.filter(round=round)
+        for rh in round_histories:
+            round_results.append({
+                "white_no": rh.white_no,
+                "white_name": rh.white_name,
+                "white_result": rh.white_result,
+                "black_no": rh.black_no,
+                "black_name": rh.black_name,
+                "black_result": rh.black_result,
+                })
+        ret["history"].append(round_results)
+    return ret
 
 
 def return_names():
