@@ -16,9 +16,9 @@
 
 2. マイグレートを実施
 コマンドライン上でmanage.pyがあるディレクトリに移動し、以下を実行
-      `python3 manage.py makemigrations swiss_gui`
-      `python3 manage.py makemigrations`
-      `python3 manage.py migrate`
+      python3 manage.py makemigrations swiss_gui
+      python3 manage.py makemigrations
+      python3 manage.py migrate
     
 3. 実行
     python3 manage.py runserver
@@ -37,6 +37,5 @@
 1. 以下、2-4を繰り返す
 1. 予定していた全ラウンドが終わったら、End Tournamentをクリック
 
-
-###　既知のバグ
+### 既知のバグ
  - 人数に対してラウンド数が多い時に、ペアリングが生成されないことがある(対処中。現在発見している限りでは、8人に対して4ラウンドを組もうとすると起きる。)
