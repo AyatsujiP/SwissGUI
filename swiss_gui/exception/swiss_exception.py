@@ -1,0 +1,3 @@
+
+class SwissException(Exception):
+    pass

@@ -1,0 +1,8 @@
+.pydev
+.pydevproject
+.project
+*/__init__.py
+*/*.pyc
+*/__pycache__/*
+/__pycache__/
+/engine.pickle
