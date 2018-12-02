@@ -14,10 +14,15 @@ import copy
 import sys
 from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults
 
+from swiss_gui.exception.swiss_exception import SwissException
+
 #トーナメント開始時に呼ばれる
 def create_initial_players():
     #プレーヤーリストを、swiss_gui_participatedplayerlistテーブルに登録する。
-    players = InitialPlayerList.objects.order_by('rating').reverse().all()
+    if len(InitialPlayerList.objects.order_by('rating').reverse().all()) > 1:
+        players = InitialPlayerList.objects.order_by('rating').reverse().all()
+    else:
+        raise SwissException("Initial player number must be more than 1.")
     
     #もともと入っていたレコードを消す
     ParticipatedPlayerList.objects.all().delete()
@@ -74,6 +79,9 @@ def create_pairing():
             player_class_list.append(distinct_player)
             player_class_dict[p.pairing_no] = p.name
         else:
+            if (len(p.opponents) is not round_no - 1) or (len(p.colour_hist) is not round_no - 1):
+                raise SwissException("Round No. must be wrong.")
+            
             distinct_player = Player(name=p.name,
                                  rating=p.rating,
                                  pairing_no = p.pairing_no,
@@ -91,6 +99,9 @@ def create_pairing():
 
     #現在のペアリングをDBに入れる
     for cp in current_pairing:
+        if not len(CurrentRoundPlayerList.objects.filter(name = cp.name)) is 1:
+            raise SwissException("CurrentRoundPlayerList must be wrong.")
+        
         q = CurrentRoundPlayerList.objects.filter(name = cp.name).get()
         q.score = cp.score
         q.float_status = cp.float_status
@@ -106,42 +117,64 @@ def create_pairing():
     
 def report_result(name, result):
     #名前と結果を投入する
-    if len(CurrentRoundPlayerList.objects.filter(name = name)) is not 0:    
-        q = CurrentRoundPlayerList.objects.filter(name = name).get()
-        q.score += result
-        q.save()
-        q = PooledResults(name=name,result=result)
-        q.save()
-        return 0
-    else:
-        return 1
+    q = CurrentRoundPlayerList.objects.filter(name = name).get()
+    q.score += result
+    q.save()
+    q = PooledResults(name=name,result=result)
+    q.save()
+
     
 def report_results(white_name, white_result, black_name, black_result):
     #エラーチェック。白の結果が入っていないときに黒の結果を入れないようにする
-    if report_result(white_name, white_result) is 0:
-        if report_result(black_name, black_result) is 0:
-            message = "Result Successfully updated!"
-        else:
-            message = "Result Update Failed"
+    validate = validate_result(white_name, white_result, black_name, black_result)
+    #結果のバリデーション。
+    if validate is 0:
+        report_result(white_name, white_result)
+        report_result(black_name, black_result)
+        message = "Result Successfully updated!"
     else:
         message = "Result Update Failed"
     
     return {"message":message}
 
+
+def validate_result(white_name, white_result, black_name, black_result):
+    validate = 0
+    #白と黒の結果を足して1にならなければ、不正
+    if not white_result + black_result == 1:
+        validate = 1
+    #もし、名前がDBになければ、不正
+    if len(CurrentRoundPlayerList.objects.filter(name = white_name)) is not 1:
+        validate = 1
+    else:
+        opponent_no = CurrentRoundPlayerList.objects.filter(name = white_name).get().opponents[-1]
+        if len(CurrentRoundPlayerList.objects.filter(pairing_no = opponent_no)) is not 1:
+            validate = 1
+        else:
+            if not CurrentRoundPlayerList.objects.filter(pairing_no = opponent_no).get().name in [black_name,]:
+                validate = 1
+    
+    return validate
+
+
 #次ラウンド移行時に呼ばれる
 def update_round():
-    round = Round.objects.get()
-    round.round_no += 1
-    PooledResults.objects.all().delete()
-    round.save()
     
-    #Buchholz法でのタイブレーク計算
-    for crp in CurrentRoundPlayerList.objects.all():
+    if len(PooledResults.objects.all()) is len(CurrentRoundPlayerList.objects.all()):
+        round = Round.objects.get()
+        round.round_no += 1
+        PooledResults.objects.all().delete()
+        round.save()
         
-        crp.tiebreak_score = tiebreak_sb(crp)
-        crp.save()
-    
-    return {"round":round.round_no}
+        #Buchholz法でのタイブレーク計算
+        for crp in CurrentRoundPlayerList.objects.all():
+            
+            crp.tiebreak_score = tiebreak_sb(crp)
+            crp.save()
+        
+        return {"can_update":1, "message":"Round %s pairing successfully created!" % round.round_no}
+    else:
+        return {"can_update":0, "message":"Results are not fully reported."}
 
 
 def tiebreak_sb(crp):

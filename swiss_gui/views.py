@@ -62,7 +62,9 @@ def submit_result(request):
 def next_round(request):
     template = loader.get_template('swiss_gui/next_round.html')
     context = update_round()
-    create_pairing()
+    if context["can_update"] is 1:
+        create_pairing()
+        
     return HttpResponse(template.render(context,request))
 
 def end_tournament(request):
