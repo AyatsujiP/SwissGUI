@@ -16,6 +16,7 @@
 
 2. マイグレートを実施
 コマンドライン上でmanage.pyがあるディレクトリに移動し、以下を実行
+
       python3 manage.py makemigrations swiss_gui
       python3 manage.py makemigrations
       python3 manage.py migrate
