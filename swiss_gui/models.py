@@ -42,3 +42,6 @@ class ResultsHistory(models.Model):
     black_no = models.IntegerField()
     black_name = models.CharField(max_length=200)
     black_result = models.FloatField()
+    
+class PickledEngine(models.Model):
+    pickled_engine = models.BinaryField()

@@ -9,12 +9,15 @@ from swissdutch.dutch import DutchPairingEngine
 from swissdutch.constants import FideTitle, Colour, FloatStatus
 from swissdutch.player import Player
 
+import pickle
 import csv
 import copy
 import sys
-from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory
+from swiss_gui.models import InitialPlayerList,ParticipatedPlayerList
+from swiss_gui.models import CurrentRoundPlayerList,Round,PooledResults,ResultsHistory,PickledEngine
 
 from swiss_gui.exception.swiss_exception import SwissException
+from swiss_gui import constants
 
 #トーナメント開始時に呼ばれる
 def create_initial_players():
@@ -30,6 +33,7 @@ def create_initial_players():
     PooledResults.objects.all().delete()
     Round.objects.all().delete()
     ResultsHistory.objects.all().delete()
+    PickledEngine.objects.all().delete()
     
     #swiss_gui_initialplayerlistテーブルから追加する。
     for i, player in enumerate(players):
@@ -59,9 +63,14 @@ def create_initial_players():
 
 #次ラウンド開始時に呼ばれる
 def create_pairing():
-    engine = DutchPairingEngine()
     #現在のラウンド数を取得する
     round_no = Round.objects.get().round_no
+    if round_no is 1:
+        #最初のラウンドは、Engineを作成する
+        engine = DutchPairingEngine()
+    else:
+        #2ラウンド以降は、pickle化したエンジンを取得する
+        engine = load_engine()
     
     #タプルに変換するためのリスト
     player_class_list = []
@@ -97,7 +106,10 @@ def create_pairing():
     player_class_tuple = tuple(player_class_list)
     
     current_pairing = engine.pair_round(round_no, player_class_tuple)
-
+    
+    #engineをダンプする
+    dump_engine(engine)
+    
     #現在のペアリングをDBに入れる
     for cp in current_pairing:
         if not len(CurrentRoundPlayerList.objects.filter(name = cp.name)) is 1:
@@ -199,16 +211,27 @@ def tiebreak_sb(crp):
     return tiebreak
 
 
+def dump_engine(engine):
+    pickled_engine = pickle.dumps(engine)
+    
+    if len(PickledEngine.objects.all()) is 0:
+        q = PickledEngine(pickled_engine = pickled_engine)
+        q.save()
+    elif len(PickledEngine.objects.all()) is 1:
+        q = PickledEngine.objects.all().get()
+        q.pickled_engine = pickled_engine
+        q.save()
+    else:
+        raise SwissException("there exist  more than 1 pickled engines!")
+
+def load_engine():
+    if len(PickledEngine.objects.all()) is 1:
+        engine = pickle.loads(PickledEngine.objects.all().get().pickled_engine)
+    else:
+        raise SwissException("Engine cannot be unpickled.")
+    return engine
+
+
 if __name__ == "__main__":
     create_initial_players()
     show_pairing()
-    """report_result('Shiki',1)
-    report_result('Kanade',0)
-    report_result('Frederica',1)
-    report_result('Mika',0)
-    report_result('Rin',0.5)
-    report_result('Shuko',0.5)
-    report_result('Nao',1)
-    report_result('Karen',0)
-    update_round()
-    show_pairing()"""
