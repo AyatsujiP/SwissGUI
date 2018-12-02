@@ -17,10 +17,12 @@
 2. マイグレートを実施
 コマンドライン上でmanage.pyがあるディレクトリに移動し、以下を実行
 
+~~~python
       python3 manage.py makemigrations swiss_gui
       python3 manage.py makemigrations
       python3 manage.py migrate
-    
+~~~
+
 3. 実行
     python3 manage.py runserver
     
@@ -44,13 +46,13 @@
 ### WSGI Setup
  - /var/www/以下にチェックアウトして/etc/apache2/apache2.confに以下を追加すると、Apacheからホストできる。
 
-
-    LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
-    WSGIScriptAlias / /var/www/SwissGUI/swiss/wsgi.py
-    <Directory /var/www/SwissGUI/swiss>
-        <Files wsgi.py>
-            Require all granted
-        </Files>
-    </Directory>
-
+~~~
+      LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
+      WSGIScriptAlias / /var/www/SwissGUI/swiss/wsgi.py
+      <Directory /var/www/SwissGUI/swiss>
+          <Files wsgi.py>
+              Require all granted
+          </Files>
+      </Directory>
+~~~
 
