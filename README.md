@@ -42,7 +42,8 @@
  - 人数に対してラウンド数が多い時に、ペアリングが生成されないことがある(対処中。現在発見している限りでは、8人に対して4ラウンドを組もうとすると起きる。)
 
 ### WSGI Setup
- - add to /etc/apache2/apache2.conf(for example:)
+ - /var/www/以下にチェックアウトして/etc/apache2/apache2.confに以下を追加すると、Apacheからホストできる。
+
 
     LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
     WSGIScriptAlias / /var/www/SwissGUI/swiss/wsgi.py
