@@ -5,7 +5,11 @@
 	<div class="index pushable">
 	<div class="ui container">
 		<div class="ui text container">
-			<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+			<a href='/swiss_gui'>
+				<div>
+					<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+				</div>
+			</a>
 
 			<h3 class="ui header">
 				A fast, simple, easy-to-use Swiss tournament manager!</p>
@@ -18,9 +22,12 @@
 			</ul>
 			</div>
 		
-			<div class="ui center aligned text container" onclick="location.href='create_tournament'">
-				<button class="ui primary button">
+			<div class="ui center aligned text container" ">
+				<button class="ui primary button" onclick="location.href='/swiss_gui/create_tournament'">
 					Create New Tournament
+				</button>
+				<button class="ui button" onclick="location.href='/swiss_gui/show_pairing_page'">
+					Resume Tournament
 				</button>
 				<button class="ui button">
 					Exit

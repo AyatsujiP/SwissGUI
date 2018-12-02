@@ -6,7 +6,11 @@
 		<form method="post" class="ui form" action="/swiss_gui/submit_result/">
 		{% csrf_token %}
 			<div class="ui text container">
-				<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+				<a href='/swiss_gui'>
+					<div>
+						<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+					</div>
+				</a>
 
 				<div class="ui three item menu">
 	  				<a class="item" href="/swiss_gui/show_pairing_page">Current Pairing</a>
