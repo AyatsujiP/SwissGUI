@@ -18,6 +18,11 @@ def create_tournament(request):
     print(context)
     return HttpResponse(template.render(context,request))
 
+def register_user(request):
+    template = loader.get_template('swiss_gui/register_user.html')
+    context = fetch_from_initialplayerlist()
+    return HttpResponse(template.render(context,request))
+
 #プレーヤーが確定した後に、トーナメントを開始する
 def start_tournament(request):
     template = loader.get_template('swiss_gui/show_pairing_page.html')
