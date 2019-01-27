@@ -14,8 +14,13 @@ def index(request):
 #トーナメントを作る
 def create_tournament(request):
     template = loader.get_template('swiss_gui/create_tournament.html')
-    context = fetch_from_initialplayerlist()
-    print(context)
+    #context = fetch_from_initialplayerlist()
+    name = request.POST
+    rating = request.POST
+    
+    context = request.POST
+    
+    #print(context)
     return HttpResponse(template.render(context,request))
 
 def register_user(request):

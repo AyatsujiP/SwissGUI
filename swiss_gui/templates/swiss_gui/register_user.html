@@ -1,17 +1,20 @@
+<!DOCTYPE html>
 <html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-<script>
-$(document).ready(function() {
-    $("#addBtn").click(function(){
-            $("#list").append($('<tr><td data-label="name"><div class="ui input"><input type="text" value=""></div></td><td data-label="rating"><div class="ui input"><input type="text" value=""></div></td><td data-label="del"><button class="ui button delbtn">削除</button></td></tr>'))
-    });
-    $("#list").on("click",".delbtn", function(){
-        $(this).parents('tr').remove();
-    })
-});
-</script>
-
+	<head>
+		<meta charset="UTF-8">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+		<script>
+		$(document).ready(function() {
+		    $("#addBtn").click(function(){
+		            $("#playerListTable").append($('<tr><td data-label="name"><div class="ui input"><input type="text" value=""></div></td><td data-label="rating"><div class="ui input"><input type="text" value=""></div></td><td data-label="del"><button class="ui button delbtn">削除</button></td></tr>'))
+		    });
+		    $("#playerListTable").on("click",".delbtn", function(){
+		        $(this).parents('tr').remove();
+		    })
+		});
+		</script>
+	</head>
 	<body>
 	<div class="index pushable">
 	<div class="ui container">
@@ -27,17 +30,15 @@ $(document).ready(function() {
 			<div class="ui segment">
 				<h3 class="ui header">Player Current List:</h3>
 			<button id="addBtn" class="ui primary button">追加</button>
-			<table class="ui celled table" id="list">
-				<thead>
-					<tr>
-						<th>name</th>
-						<th>rating</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				    <form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
-						{% csrf_token %}
+				<table class="ui celled table" id="playerListTable">
+					<thead>
+						<tr>
+							<th>name</th>
+							<th>rating</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
 						{%for pl in player_list %}
 							<tr>
 								<td data-label="name"><div class="ui input"><input type="text" value="{{pl.1}}"></div></td>
@@ -45,15 +46,18 @@ $(document).ready(function() {
 								<td data-label="del"><button class="ui button delbtn">削除</button></td>
 							</tr>
 						{%endfor%}
-					</form>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			
+				</div>
+				<form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
+				    {% csrf_token %}
+					<button class="ui primary button" onclick="createTournament();">
+					    Create Tournament
+					</button>
+				</form>
 			</div>
-			<button class="ui primary button" onclick="createTournament();">
-			    Create Tournament
-			</button>
-		</div>
-		
+
 	</div>
 	</div>
 	</body>
@@ -61,6 +65,22 @@ $(document).ready(function() {
 	<script>
 	    function createTournament(){
 	        var f = document.forms["tournament_submit"];
+	        var request = document.createElement('input');
+	        
+	        
+	        //get tables
+	        var tr = document.getElementById("playerListTable").children[1].children;
+	        
+	        var array = [];
+	        for (var i = 0; i < tr.length; i++){
+	        	info = tr[i].getElementsByTagName('input');
+				array.push([info[0].value, info[1].value]);
+	        }
+	        
+			console.log(array);
+			request.name = "playerList";
+			request.value = array;
+	        f.appendChild(request);
 	        f.submit();
 	    }
 	</script>
