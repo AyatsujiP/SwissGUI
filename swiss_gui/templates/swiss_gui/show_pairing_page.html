@@ -1,6 +1,9 @@
+<!DOCTYPE html>
 <html>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+	</head>
 	<body>
 		<div class="ui text container">
 			<a href='/swiss_gui'>
@@ -39,10 +42,10 @@
 						<tr>
 							<td data-label="white_player ID">{{pl.white_no}}</td>
 							<td data-label="white_name">{{pl.white_name}}</td>
-							<td data-label="white_name">{{pl.white_score}}</td>
+							<td data-label="white_score">{{pl.white_score}}</td>
 							<td></td>
-							<td data-label="white_name">{{pl.black_score}}</td>
-							<td data-label="black_name">{{pl.black_no}}</td>
+							<td data-label="black_score">{{pl.black_score}}</td>
+							<td data-label="black_player_ID">{{pl.black_no}}</td>
 							<td data-label="black_name">{{pl.black_name}}</td>
 						</tr>
 					{%endfor%}
@@ -58,12 +61,19 @@
 				<div class="ui text">
 					If all rounds end, please click "End tournament" Button.
 				</div>
-				<div class="ui right aligned text container" onclick="location.href='/swiss_gui/end_tournament'">
-					<button class="ui button">
+				<div class="ui right aligned text container" onclick="endTournament();">
+					<button class="negative ui button">
 						End tournament
 					</button>
 				</div>
 			</div>
 		</div>
 	</body>
+	<script>
+		function endTournament(){
+			if (window.confirm('Do you really want to end this tournament?')){
+				location.href='/swiss_gui/end_tournament';
+			}
+		}
+	</script>
 </html>

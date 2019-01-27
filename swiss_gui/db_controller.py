@@ -13,13 +13,32 @@ def fetch_from_initialplayerlist():
     ret = {"player_list":[]}
     qs = InitialPlayerList.objects.all()
     for i,q in enumerate(qs):
-        ret["player_list"].append([q.id,q.name,q.rating])
+        ret["player_list"].append([i+1,q.name,q.rating])
     
     return ret
 
+def create_with_playerlist(player_list):
+    
+    #もともと入っていたプレーヤーを消す
+    InitialPlayerList.objects.all().delete()
+    
+    for p in player_list["playerlist"]:
+        p["rating"] = int(p["rating"])
+        
+    player_list["playerlist"] = sorted(player_list["playerlist"],key=lambda p: -p["rating"])
+    
+    for i,p in enumerate(player_list["playerlist"]):
+        q = InitialPlayerList(
+            name = player_list["playerlist"][i]["name"],
+            rating = player_list["playerlist"][i]["rating"])
+        q.save()
+    
+    return fetch_from_initialplayerlist()
+    
 
 def return_pairing():
     current_pairing = CurrentRoundPlayerList.objects.all()
+    
     
     ret = {"pairing_list":[],"round":Round.objects.get().round_no}
     
@@ -65,7 +84,7 @@ def return_pairing():
 
 
 def return_standing():
-    ret = {"standing":[]}
+    ret = {"standing":[],"round":Round.objects.get().round_no}
     player_standing = CurrentRoundPlayerList.objects.order_by('-score','-tiebreak_score','pairing_no').all()
     for i,ps in enumerate(player_standing):
         ret["standing"].append({"ranking":i+1,"name":ps.name,"score":ps.score,"tiebreak_score":ps.tiebreak_score})

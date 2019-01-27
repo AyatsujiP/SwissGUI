@@ -22,8 +22,8 @@ from swiss_gui import constants
 #トーナメント開始時に呼ばれる
 def create_initial_players():
     #プレーヤーリストを、swiss_gui_participatedplayerlistテーブルに登録する。
-    if len(InitialPlayerList.objects.order_by('rating').reverse().all()) > 1:
-        players = InitialPlayerList.objects.order_by('rating').reverse().all()
+    if len(InitialPlayerList.objects.order_by('-rating','name').all()) > 1:
+        players = InitialPlayerList.objects.order_by('-rating','name').all()
     else:
         raise SwissException("Initial player number must be more than 1.")
     
