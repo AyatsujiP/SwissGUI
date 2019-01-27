@@ -23,8 +23,21 @@
       python3 manage.py migrate
 ~~~
 
-3. 実行
+3.ユーザ作成
+以下のコマンドを実施。
+
+~~~python
+      python3 manage.py createsuperuser
+~~~
+
+実施後、ユーザ名、Eメール(任意)、パスワードを入力するプロンプトが現れるので、
+このアプリケーションで使うユーザ名とパスワードを入力する。
+
+4. 実行
+
+~~~python
     python3 manage.py runserver
+~~~
     
 - http://127.0.0.1:8000/で実行される。
 
