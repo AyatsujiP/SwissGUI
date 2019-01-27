@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from swiss_gui.db_controller import fetch_from_initialplayerlist, return_pairing, return_names,return_history, return_standing
+from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing, return_names,return_history, return_standing
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
+import json
 
 # Create your views here.
 
@@ -14,11 +15,9 @@ def index(request):
 #トーナメントを作る
 def create_tournament(request):
     template = loader.get_template('swiss_gui/create_tournament.html')
-    #context = fetch_from_initialplayerlist()
-    name = request.POST
-    rating = request.POST
+    player_list = json.loads(request.POST["playerList"])
     
-    context = request.POST
+    context = create_with_playerlist(player_list)
     
     #print(context)
     return HttpResponse(template.render(context,request))

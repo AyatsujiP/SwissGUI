@@ -17,9 +17,31 @@ def fetch_from_initialplayerlist():
     
     return ret
 
+def create_with_playerlist(player_list):
+    
+    #もともと入っていたプレーヤーを消す
+    InitialPlayerList.objects.all().delete()
+    
+    for p in player_list["playerlist"]:
+        p["rating"] = int(p["rating"])
+        
+    
+    player_list["playerlist"] = sorted(player_list["playerlist"],key=lambda p: -p["rating"])
+    
+    print(player_list["playerlist"])
+    
+    for i,p in enumerate(player_list["playerlist"]):
+        q = InitialPlayerList(
+            name = player_list["playerlist"][i]["name"],
+            rating = player_list["playerlist"][i]["rating"])
+        q.save()
+    
+    return fetch_from_initialplayerlist()
+    
 
 def return_pairing():
     current_pairing = CurrentRoundPlayerList.objects.all()
+    
     
     ret = {"pairing_list":[],"round":Round.objects.get().round_no}
     
@@ -27,6 +49,7 @@ def return_pairing():
         if cp.colour_hist[-1] is 1: #colour.white == 1
             
             black_name = CurrentRoundPlayerList.objects.filter(pairing_no=cp.opponents[-1]).get().name
+            print(cp.name,black_name)
             #白と黒のスコアを取得する
 
             if len(PooledResults.objects.filter(name=cp.name)) is not 0:
@@ -60,7 +83,7 @@ def return_pairing():
                 "black_score": 0
                 }
             ret["pairing_list"].append(pairing_dict)        
-
+    print(ret)
     return (ret)
 
 

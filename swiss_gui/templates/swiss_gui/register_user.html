@@ -67,19 +67,19 @@
 	        var f = document.forms["tournament_submit"];
 	        var request = document.createElement('input');
 	        
-	        
 	        //get tables
 	        var tr = document.getElementById("playerListTable").children[1].children;
 	        
-	        var array = [];
+	        array = {'playerlist': []};
 	        for (var i = 0; i < tr.length; i++){
 	        	info = tr[i].getElementsByTagName('input');
-				array.push([info[0].value, info[1].value]);
+				array['playerlist'].push({'name': info[0].value,'rating': info[1].value});
 	        }
-	        
-			console.log(array);
-			request.name = "playerList";
-			request.value = array;
+			
+			request.type = 'hidden';
+			request.name = 'playerList';
+			request.value = JSON.stringify(array);
+			
 	        f.appendChild(request);
 	        f.submit();
 	    }
