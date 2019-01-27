@@ -24,29 +24,38 @@
 			</h2>
 			<div class="ui segment">
 				<h3 class="ui header">Pairing:</h3>
-			<table class="ui celled table">
-				<thead>
-					<tr>
-						<th>Ranking</th>
-						<th>Name</th>
-						<th>Score</th>
-						<th>TieBreak</th>
-					</tr>
-				</thead>
-				
-				<tbody>
-					{%for s in standing %}
+				<table class="ui celled table">
+					<thead>
 						<tr>
-							<td data-label="white_player ID">{{s.ranking}}</td>
-							<td data-label="white_player ID">{{s.name}}</td>
-							<td data-label="white_player ID">{{s.score}}</td>
-							<td data-label="white_player ID">{{s.tiebreak_score}}</td>
+							<th>Ranking</th>
+							<th>Name</th>
+							<th>Score</th>
+							<th>TieBreak</th>
 						</tr>
-					{%endfor%}
-				</tbody>
-			</table>
-
-		</div>
+					</thead>
+					
+					<tbody>
+						{%for s in standing %}
+							<tr>
+								<td data-label="white_player ID">{{s.ranking}}</td>
+								<td data-label="white_player ID">{{s.name}}</td>
+								<td data-label="white_player ID">{{s.score}}</td>
+								<td data-label="white_player ID">{{s.tiebreak_score}}</td>
+							</tr>
+						{%endfor%}
+					</tbody>
+				</table>
+			</div>
+			{% if tournament_end == 1 %}
+			<div class="ui right aligned text container">
+				<button class="ui primary button" onclick="location.href='/'">
+					Return to Top Page
+				</button>
+				<button class="negative ui button" onclick="location.href='/accounts/logout'">
+					Exit
+				</button>
+			</div>
+			{% endif %}
 		</div>
 	</body>
 </html>

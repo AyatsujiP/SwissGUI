@@ -13,11 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from swiss_gui import views
 
 urlpatterns = [
+    url('accounts/',include('django.contrib.auth.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$',views.index_redirect,name='index_redirect'),
     url(r'swiss_gui/$', views.index,name='index'),
@@ -31,4 +32,5 @@ urlpatterns = [
     url(r'swiss_gui/submit_result/', views.submit_result,name='submit_result'),
     url(r'swiss_gui/next_round/', views.next_round,name='next_round'),
     url(r'swiss_gui/end_tournament/', views.end_tournament,name='end_tournament'),
+    
 ]
