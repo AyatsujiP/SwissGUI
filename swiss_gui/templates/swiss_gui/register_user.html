@@ -7,7 +7,7 @@
 		<script>
 		$(document).ready(function() {
 		    $("#addBtn").click(function(){
-		            $("#playerListTable").append($('<tr><td data-label="name"><div class="ui input"><input type="text" value=""></div></td><td data-label="rating"><div class="ui input"><input type="text" value=""></div></td><td data-label="del"><button class="ui button delbtn">削除</button></td></tr>'))
+		            $("#playerListTable").append($('<tr><td data-label="name"><div class="ui input"><input type="text" value=""></div></td><td data-label="rating"><div class="ui input"><input type="text" value=""></div></td><td data-label="del"><button class="negative ui button delbtn">Delete</button></td></tr>'))
 		    });
 		    $("#playerListTable").on("click",".delbtn", function(){
 		        $(this).parents('tr').remove();
@@ -16,50 +16,49 @@
 		</script>
 	</head>
 	<body>
-	<div class="index pushable">
-	<div class="ui container">
-		<div class="ui text container">
-			<a href='/swiss_gui'>
-				<div>
-					<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+		<div class="index pushable">
+			<div class="ui container">
+				<div class="ui text container">
+					<a href='/swiss_gui'>
+						<div>
+							<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+						</div>
+					</a>
+					<h3 class="ui header">
+						Register User</p>
+					</h3>
+					<div class="ui segment">
+						<h3 class="ui header">Player Current List:</h3>
+						<button id="addBtn" class="positive ui primary button">Add</button>
+						<table class="ui celled table" id="playerListTable">
+							<thead>
+								<tr>
+									<th>name</th>
+									<th>rating</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{%for pl in player_list %}
+									<tr>
+										<td data-label="name"><div class="ui input"><input type="text" value="{{pl.1}}"></div></td>
+										<td data-label="rating"><div class="ui input"><input type="text" value="{{pl.2}}"></div></td>
+										<td data-label="del"><button class="negative ui button delbtn">Delete</button></td>
+									</tr>
+								{%endfor%}
+							</tbody>
+						</table>
+					
+						<form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
+						    {% csrf_token %}
+							<button class="ui primary button" onclick="createTournament();">
+							    Create Tournament
+							</button>
+						</form>
+					</div>
 				</div>
-			</a>
-			<h3 class="ui header">
-				Register User</p>
-			</h3>
-			<div class="ui segment">
-				<h3 class="ui header">Player Current List:</h3>
-			<button id="addBtn" class="ui primary button">追加</button>
-				<table class="ui celled table" id="playerListTable">
-					<thead>
-						<tr>
-							<th>name</th>
-							<th>rating</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{%for pl in player_list %}
-							<tr>
-								<td data-label="name"><div class="ui input"><input type="text" value="{{pl.1}}"></div></td>
-								<td data-label="rating"><div class="ui input"><input type="text" value="{{pl.2}}"></div></td>
-								<td data-label="del"><button class="ui button delbtn">削除</button></td>
-							</tr>
-						{%endfor%}
-					</tbody>
-				</table>
-			
-				</div>
-				<form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
-				    {% csrf_token %}
-					<button class="ui primary button" onclick="createTournament();">
-					    Create Tournament
-					</button>
-				</form>
 			</div>
-
-	</div>
-	</div>
+		</div>
 	</body>
 
 	<script>

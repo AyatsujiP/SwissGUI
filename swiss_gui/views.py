@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing, return_names,return_history, return_standing
@@ -11,6 +11,9 @@ def index(request):
     template = loader.get_template('swiss_gui/index.html')
     context = {}
     return HttpResponse(template.render(context,request))
+
+def index_redirect(request):
+    return redirect("index")
 
 #トーナメントを作る
 def create_tournament(request):
@@ -68,7 +71,7 @@ def show_history_page(request):
 #結果を報告する
 def submit_result(request):
     if request.method == "POST":
-        print (request.POST["whitename"],request.POST["whiteresult"],request.POST["blackname"],request.POST["blackresult"])
+        #print (request.POST["whitename"],request.POST["whiteresult"],request.POST["blackname"],request.POST["blackresult"])
         template = loader.get_template('swiss_gui/submit_result.html')
         #結果を報告
         context = report_results(request.POST["whitename"],float(request.POST["whiteresult"]),

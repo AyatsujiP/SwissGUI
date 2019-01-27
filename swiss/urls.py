@@ -19,6 +19,7 @@ from swiss_gui import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$',views.index_redirect,name='index_redirect'),
     url(r'swiss_gui/$', views.index,name='index'),
     url(r'swiss_gui/register_user/', views.register_user,name='register_user'),
     url(r'swiss_gui/create_tournament/', views.create_tournament,name='create_tournament'),
