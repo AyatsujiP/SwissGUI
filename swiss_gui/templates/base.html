@@ -8,19 +8,42 @@
         {% endblock %}
 	</head>
 	<body>
-	<div class="index pushable">
-		<div class="ui container">
-			<div class="ui text container">
-				<a href='/swiss_gui'>
-					<div>
-						<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
-					</div>
+
+	<div class="ui grid">
+		<div class="ui two wide column">
+			<div class="ui left fixed vertical menu">
+				<a class="item" href="/">
+					Swiss Tournament Organizer
 				</a>
+				<div class="item">
+					Tournament Management
+					<div class="menu">
+						<a class="item" href="/swiss_gui/register_user">
+							Create New Tournament
+						</a>
+						<a class="item" href="/swiss_gui/show_pairing_page">
+							Resume Tournament
+						</a>
+					</div>
+				</div>
+
+				<a class="item" href="/accounts/logout">
+					Logout
+				</a>
+			</div>			
+		</div>
+		<div class="ui fourteen wide column">
+			<div class="ui text container">
+				<div>
+					<h1 class="ui center aligned dividing header">Swiss Tournament Organizer</h1>
+				</div>
 	
-				{% block content %}
-				{% endblock %}
+			{% block content %}
+			{% endblock %}
 			</div>
 		</div>
 	</div>
+	{% block bottomscript %}
+	{% endblock %}
 	</body>
 </html>
