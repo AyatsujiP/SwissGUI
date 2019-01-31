@@ -15,6 +15,8 @@
 	</script>
 	<script>
 	    function createTournament(){
+	    	var user_names = [];
+	    	var is_validated = true;
 	        var f = document.forms["tournament_submit"];
 	        var request = document.createElement('input');
 	        
@@ -40,10 +42,29 @@
 			request.name = 'playerList';
 			request.value = JSON.stringify(array);
 			
-			console.log(request.value);
+			user_names = [];
+			for (var i=0; i<array['playerlist'].length;i++){
+				if (user_names.indexOf(array['playerlist'][i]['name']) != -1){
+					is_validated = false;
+				}
+				
+				if (array['playerlist'][i]['name'].length == 0){
+					is_validated = false;
+				}else{
+					user_names.push(array['playerlist'][i]['name']);
+				}
+				if(isNaN(array['playerlist'][i]['rating'])){
+					is_validated = false;
+				}
+			}
 			
-	        f.appendChild(request);
-	        f.submit();
+			if(is_validated === true){
+		        f.appendChild(request);
+		        f.action= '/swiss_gui/create_tournament/';
+		        f.submit();
+			}else{
+				window.alert('User Data are not appropriately configured.');
+			}
 	    }
 	</script>
 {% endblock %}
@@ -69,7 +90,7 @@
 						<div class="field ui calendar required" id="TournamentDatePicker">
 							<div class="ui input left icon">
     							<i class="calendar icon"></i>
-    							<input type="text" name="date" placeholder="日付">
+    							<input type="text" name="date" placeholder="Enter Date...">
   							</div>
 						</div>
 					</td>
@@ -105,12 +126,11 @@
 				{%endfor%}
 			</tbody>
 		</table>
-	
-		<form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
+		<button class="ui primary button" onclick="createTournament();">
+			Create Tournament
+		</button>	
+		<form name="tournament_submit" method="post">
 		    {% csrf_token %}
-			<button class="ui primary button" onclick="createTournament();">
-			    Create Tournament
-			</button>
 		</form>
 	</div>
 
