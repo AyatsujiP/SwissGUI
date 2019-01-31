@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^$',views.index_redirect,name='index_redirect'),
     url(r'swiss_gui/$', views.index,name='index'),
     url(r'swiss_gui/register_user/', views.register_user,name='register_user'),
+    url(r'swiss_gui/register_error/', views.register_error,name='register_error'),
     url(r'swiss_gui/create_tournament/', views.create_tournament,name='create_tournament'),
     url(r'swiss_gui/start_tournament/', views.start_tournament,name='start_tournament'),
     url(r'swiss_gui/show_pairing_page/', views.show_pairing_page,name='show_pairing_page'),
