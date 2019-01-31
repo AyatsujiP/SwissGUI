@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block script %}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.css"/>
 	<script>
 	$(document).ready(function() {
 	    $("#addBtn").click(function(){
@@ -13,6 +15,8 @@
 	</script>
 	<script>
 	    function createTournament(){
+	    	var user_names = [];
+	    	var is_validated = true;
 	        var f = document.forms["tournament_submit"];
 	        var request = document.createElement('input');
 	        
@@ -25,23 +29,85 @@
 				array['playerlist'].push({'name': info[0].value,'rating': info[1].value});
 	        }
 			
+	        array['tournamentName'] = document.getElementById("TournamentName").value;
+	        if(typeof calendarDate !== "undefined"){
+		        array['tournamentDate'] = calendarDate;
+	        }else{
+	        	array['tournamentDate'] = '';
+	        }
+	        array['tournamentSite'] = document.getElementById("TournamentSite").value;
+	        array['tournamentOrganizer'] = document.getElementById("TournamentOrganizer").value;
+	        
 			request.type = 'hidden';
 			request.name = 'playerList';
 			request.value = JSON.stringify(array);
 			
-	        f.appendChild(request);
-	        f.submit();
+			user_names = [];
+			for (var i=0; i<array['playerlist'].length;i++){
+				if (user_names.indexOf(array['playerlist'][i]['name']) != -1){
+					is_validated = false;
+				}
+				
+				if (array['playerlist'][i]['name'].length == 0){
+					is_validated = false;
+				}else{
+					user_names.push(array['playerlist'][i]['name']);
+				}
+				if(isNaN(array['playerlist'][i]['rating'])){
+					is_validated = false;
+				}
+			}
+			
+			if(is_validated === true){
+		        f.appendChild(request);
+		        f.action= '/swiss_gui/create_tournament/';
+		        f.submit();
+			}else{
+				window.alert('User Data are not appropriately configured.');
+			}
 	    }
 	</script>
 {% endblock %}
 
 {% block content %}
-	<h3 class="ui header">
-		Register User</p>
-	</h3>
+
+	<h2 class="ui header">
+		Register Tournament</p>
+	</h2>
 	<div class="ui segment">
-		<h3 class="ui header">Player Current List:</h3>
-		<button id="addBtn" class="positive ui primary button">Add</button>
+		<h3 class="ui header">
+			Tournament Information:</p>
+		</h3>
+		<table class="ui celled table" id="TournamentInfo">
+			<tbody>
+				<tr>
+					<td>Tournament Name</td>
+					<td><div class="ui input"><input id="TournamentName" type="text" placeholder="Enter name..."></div></td>
+				</tr>
+				<tr>
+					<td>Tournament Date</td>
+					<td>
+						<div class="field ui calendar required" id="TournamentDatePicker">
+							<div class="ui input left icon">
+    							<i class="calendar icon"></i>
+    							<input type="text" name="date" placeholder="Enter Date...">
+  							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Tournament Site</td>
+					<td><div class="ui input"><input id="TournamentSite" type="text" placeholder="Enter site..."></div></td>
+				</tr>
+				<tr>
+					<td>Tournament Organizer</td>
+					<td><div class="ui input"><input id="TournamentOrganizer" type="text" placeholder="Enter organizer..."></div></td>
+				</tr>					
+			</tbody>
+		</table>
+		
+		<h3 class="ui header">Player Information:</h3>
+		<button id="addBtn" class="ui teal button">Add</button>
 		<table class="ui celled table" id="playerListTable">
 			<thead>
 				<tr>
@@ -60,13 +126,31 @@
 				{%endfor%}
 			</tbody>
 		</table>
-	
-		<form name="tournament_submit" method="post" action='/swiss_gui/create_tournament/'>
+		<button class="ui primary button" onclick="createTournament();">
+			Create Tournament
+		</button>	
+		<form name="tournament_submit" method="post">
 		    {% csrf_token %}
-			<button class="ui primary button" onclick="createTournament();">
-			    Create Tournament
-			</button>
 		</form>
 	</div>
 
+{% endblock %}
+
+{% block bottomscript %}
+<script>
+	var calendarDate = '';
+	$('#TournamentDatePicker').calendar(
+	{type: 'date',
+	onChange: function (date, text) {
+	     calendarDate = text;
+	  },
+	  formatter: {
+		    date: function (date) {
+		      var day = ('0' + date.getDate()).slice(-2);
+		      var month = ('0' + (date.getMonth() + 1)).slice(-2);
+		      var year = date.getFullYear();
+		      return year + '-' + month + '-' + day;
+		    }
+		  }});
+</script>
 {% endblock %}

@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.template.response import TemplateResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing, return_names,return_history, return_standing
+from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing 
+from swiss_gui.db_controller import return_names,return_history, return_standing,set_tournament_info
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
 import json
+from swiss_gui.validation import validate_tournament_info
 
 # Create your views here.
 
@@ -22,18 +25,33 @@ def index_redirect(request):
 @login_required
 def create_tournament(request):
     template = loader.get_template('swiss_gui/create_tournament.html')
-    player_list = json.loads(request.POST["playerList"])
+    tournament_info = json.loads(request.POST["playerList"])
     
-    context = create_with_playerlist(player_list)
+    is_validated = validate_tournament_info(tournament_info)
     
-    #print(context)
-    return HttpResponse(template.render(context,request))
+    if is_validated:
+        set_tournament_info(tournament_info["tournamentName"],
+                            tournament_info["tournamentDate"],
+                            tournament_info["tournamentSite"],
+                            tournament_info["tournamentOrganizer"])
+    
+        context = create_with_playerlist(tournament_info)
+    
+        return HttpResponse(template.render(context,request))
+    else:
+        return TemplateResponse(request,'swiss_gui/register_error.html')
 
 @login_required
 def register_user(request):
     template = loader.get_template('swiss_gui/register_user.html')
     context = fetch_from_initialplayerlist()
     return HttpResponse(template.render(context,request))
+
+
+@login_required
+def register_error(request):
+    return TemplateResponse(request,'swiss_gui/register_error.html')
+
 
 #プレーヤーが確定した後に、トーナメントを開始する
 @login_required
@@ -66,7 +84,8 @@ def show_standing_page(request):
 @login_required
 def show_report_page(request):
     template = loader.get_template('swiss_gui/show_report_page.html')
-    context = return_names()
+    context = {"names":sorted(return_names()["names"])}
+
     return HttpResponse(template.render(context,request))
 
 

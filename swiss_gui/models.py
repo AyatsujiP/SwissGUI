@@ -16,6 +16,11 @@ class ParticipatedPlayerList(models.Model):
     colour_hist = ArrayField(models.IntegerField(),null=True)
     tiebreak_score = models.FloatField(null=True)
     
+class TournamentInfo(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    date = models.DateField(null=True)
+    site = models.CharField(max_length=200, null=True)
+    organizer = models.CharField(max_length=200, null=True)
 
 class CurrentRoundPlayerList(models.Model):
     name = models.CharField(max_length=200)

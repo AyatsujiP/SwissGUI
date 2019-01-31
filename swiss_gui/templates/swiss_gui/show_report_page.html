@@ -15,26 +15,70 @@
 				</h2>
 				<div class="ui segment">
 					<h3 class="ui header">Report Result:</h3>
-				<table class="ui celled table">
-					<thead>
-						<tr>
-							<th>White</th>
-							<th></th>
-							<th>Score</th>
-							<th></th>
-							<th>Black</th>
-						</tr>
-					</thead>
-					<tbody>
-						<div class="fields">
-							<td><div class="ui input"><input type="text" name="whitename" placeholder="white name"></div></td>
-							<td><div class="ui input"><input type="text" name="whiteresult" placeholder="0,0.5,1"></div></td>
-							<td></td>
-							<td><div class="ui input"><input type="text" name="blackresult" placeholder="0,0.5,1"></div></td>
-							<td><div class="ui input"><input type="text" name="blackname" placeholder="black name"></div></td>
-						</div>
-					</tbody>
-				</table>
+					<table class="ui table">
+						<thead>
+							<tr>
+								<th >White</th>
+								<th ></th>
+								<th >Score</th>
+								<th ></th>
+								<th >Black</th>
+							</tr>
+						</thead>
+						<tbody>
+							<div class="fields">
+								<td class="five wide">
+									<div class="ui fluid selection dropdown">
+										<input type="hidden" name="whitename">
+										<i class="dropdown icon"></i>
+										<div class="default text">White name</div>
+										<div class="menu">
+										{%for name in names %}
+											<div class="item" data-value="{{name}}">{{name}}</div>
+										{% endfor %}
+										</div>
+									</div>
+								</td>
+								<td class="two wide">
+									<div class="ui fluid selection dropdown">
+										<input type="hidden" name="whiteresult">
+										<i class="dropdown icon"></i>
+										<div class="default text">0,0.5,1</div>
+										<div class="menu">
+											<div class="item" data-value="0">0</div>
+											<div class="item" data-value="0.5">0.5</div>
+											<div class="item" data-value="1">1</div>
+										</div>
+									</div>
+								</td>
+								<td class="two wide"></td>
+								<td class="two wide">
+									<div class="ui fluid selection dropdown">
+										<input type="hidden" name="blackresult">
+										<i class="dropdown icon"></i>
+										  <div class="default text">0,0.5,1</div>
+										  <div class="menu">
+										    <div class="item" data-value="0">0</div>
+										    <div class="item" data-value="0.5">0.5</div>
+										    <div class="item" data-value="1">1</div>
+										  </div>
+									</div>
+								</td>
+								<td class="five wide">
+									<div class="ui fluid selection dropdown">
+										<input type="hidden" name="blackname">
+										<i class="dropdown icon"></i>
+										<div class="default text">Black name</div>
+										<div class="menu">
+										{%for name in names %}
+											<div class="item" data-value="{{name}}">{{name}}</div>
+										{% endfor %}
+										</div>
+									</div>
+								</td>
+							</div>
+						</tbody>
+					</table>
 				</div>
 				<div class="ui center aligned text container">
 					<button class="ui primary button" type="submit">
@@ -42,4 +86,10 @@
 					</button>
 				</div>
 			</form>
+{% endblock %}
+
+{% block bottomscript %}
+<script>
+	$('.ui.dropdown').dropdown();
+</script>
 {% endblock %}
