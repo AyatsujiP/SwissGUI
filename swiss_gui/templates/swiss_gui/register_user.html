@@ -25,9 +25,16 @@
 				array['playerlist'].push({'name': info[0].value,'rating': info[1].value});
 	        }
 			
+	        array['tournamentName'] = document.getElementById("TournamentName").value;
+	        array['tournamentDate'] = document.getElementById("TournamentDate").value;
+	        array['tournamentSite'] = document.getElementById("TournamentSite").value;
+	        array['tournamentOrganizer'] = document.getElementById("TournamentOrganizer").value;
+	        
 			request.type = 'hidden';
 			request.name = 'playerList';
 			request.value = JSON.stringify(array);
+			
+			console.log(request.value);
 			
 	        f.appendChild(request);
 	        f.submit();
@@ -36,11 +43,36 @@
 {% endblock %}
 
 {% block content %}
-	<h3 class="ui header">
-		Register User</p>
-	</h3>
+
+	<h2 class="ui header">
+		Register Tournament</p>
+	</h2>
 	<div class="ui segment">
-		<h3 class="ui header">Player Current List:</h3>
+		<h3 class="ui header">
+			Tournament Information:</p>
+		</h3>
+		<table class="ui celled table" id="TournamentInfo">
+			<tbody>
+				<tr>
+					<td>Tournament Name</td>
+					<td><div class="ui input"><input id="TournamentName" type="text" placeholder="Enter name..."></div></td>
+				</tr>
+				<tr>
+					<td>Tournament Date</td>
+					<td><div class="ui input"><input id="TournamentDate" type="text" placeholder="Enter name..."></div></td>
+				</tr>
+				<tr>
+					<td>Tournament Site</td>
+					<td><div class="ui input"><input id="TournamentSite" type="text" placeholder="Enter name..."></div></td>
+				</tr>
+				<tr>
+					<td>Tournament Organizer</td>
+					<td><div class="ui input"><input id="TournamentOrganizer" type="text" placeholder="Enter name..."></div></td>
+				</tr>					
+			</tbody>
+		</table>
+		
+		<h3 class="ui header">Player Information:</h3>
 		<button id="addBtn" class="ui teal button">Add</button>
 		<table class="ui celled table" id="playerListTable">
 			<thead>
