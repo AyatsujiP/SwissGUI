@@ -84,7 +84,8 @@ def show_standing_page(request):
 @login_required
 def show_report_page(request):
     template = loader.get_template('swiss_gui/show_report_page.html')
-    context = return_names()
+    context = {"names":sorted(return_names()["names"])}
+
     return HttpResponse(template.render(context,request))
 
 
