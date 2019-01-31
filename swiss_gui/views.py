@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing, return_names,return_history, return_standing
+from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing 
+from swiss_gui.db_controller import return_names,return_history, return_standing,set_tournament_info
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
 import json
 
@@ -22,11 +23,15 @@ def index_redirect(request):
 @login_required
 def create_tournament(request):
     template = loader.get_template('swiss_gui/create_tournament.html')
-    player_list = json.loads(request.POST["playerList"])
+    tournament_info = json.loads(request.POST["playerList"])
     
-    context = create_with_playerlist(player_list)
+    set_tournament_info(tournament_info["tournamentName"],
+                        tournament_info["tournamentDate"],
+                        tournament_info["tournamentSite"],
+                        tournament_info["tournamentOrganizer"])
     
-    #print(context)
+    context = create_with_playerlist(tournament_info)
+    
     return HttpResponse(template.render(context,request))
 
 @login_required

@@ -6,7 +6,7 @@ import django
 django.setup()
 
 from swissdutch.constants import FideTitle, Colour, FloatStatus
-from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory
+from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory,TournamentInfo
 
 
 def fetch_from_initialplayerlist():
@@ -35,6 +35,23 @@ def create_with_playerlist(player_list):
     
     return fetch_from_initialplayerlist()
     
+
+def set_tournament_info(name, date, site, organizer):
+    TournamentInfo.objects.all().delete()
+    
+    if not date:
+        q = TournamentInfo(name=name,
+                           date=None,
+                           site=site,
+                           organizer=organizer)
+    else:
+        q = TournamentInfo(name=name,
+                           date=date,
+                           site=site,
+                           organizer=organizer)        
+    
+    q.save()
+
 
 def return_pairing():
     current_pairing = CurrentRoundPlayerList.objects.all()

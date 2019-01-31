@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block script %}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui-calendar/0.0.8/calendar.min.css"/>
 	<script>
 	$(document).ready(function() {
 	    $("#addBtn").click(function(){
@@ -26,7 +28,11 @@
 	        }
 			
 	        array['tournamentName'] = document.getElementById("TournamentName").value;
-	        array['tournamentDate'] = document.getElementById("TournamentDate").value;
+	        if(typeof calendarDate !== "undefined"){
+		        array['tournamentDate'] = calendarDate;
+	        }else{
+	        	array['tournamentDate'] = '';
+	        }
 	        array['tournamentSite'] = document.getElementById("TournamentSite").value;
 	        array['tournamentOrganizer'] = document.getElementById("TournamentOrganizer").value;
 	        
@@ -59,15 +65,22 @@
 				</tr>
 				<tr>
 					<td>Tournament Date</td>
-					<td><div class="ui input"><input id="TournamentDate" type="text" placeholder="Enter name..."></div></td>
+					<td>
+						<div class="field ui calendar required" id="TournamentDatePicker">
+							<div class="ui input left icon">
+    							<i class="calendar icon"></i>
+    							<input type="text" name="date" placeholder="日付">
+  							</div>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td>Tournament Site</td>
-					<td><div class="ui input"><input id="TournamentSite" type="text" placeholder="Enter name..."></div></td>
+					<td><div class="ui input"><input id="TournamentSite" type="text" placeholder="Enter site..."></div></td>
 				</tr>
 				<tr>
 					<td>Tournament Organizer</td>
-					<td><div class="ui input"><input id="TournamentOrganizer" type="text" placeholder="Enter name..."></div></td>
+					<td><div class="ui input"><input id="TournamentOrganizer" type="text" placeholder="Enter organizer..."></div></td>
 				</tr>					
 			</tbody>
 		</table>
@@ -101,4 +114,23 @@
 		</form>
 	</div>
 
+{% endblock %}
+
+{% block bottomscript %}
+<script>
+	var calendarDate = '';
+	$('#TournamentDatePicker').calendar(
+	{type: 'date',
+	onChange: function (date, text) {
+	     calendarDate = text;
+	  },
+	  formatter: {
+		    date: function (date) {
+		      var day = ('0' + date.getDate()).slice(-2);
+		      var month = ('0' + (date.getMonth() + 1)).slice(-2);
+		      var year = date.getFullYear();
+		      return year + '-' + month + '-' + day;
+		    }
+		  }});
+</script>
 {% endblock %}
