@@ -6,7 +6,7 @@ import django
 django.setup()
 
 from swissdutch.constants import FideTitle, Colour, FloatStatus
-from swiss_gui.models import  InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory,TournamentInfo
+from swiss_gui.models import InitialPlayerList,ParticipatedPlayerList,CurrentRoundPlayerList,Round,PooledResults,ResultsHistory,TournamentInfo
 
 
 def fetch_from_initialplayerlist():

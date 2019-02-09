@@ -5,9 +5,12 @@ from django.template import loader
 from django.contrib.auth.decorators import login_required
 from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing 
 from swiss_gui.db_controller import return_names,return_history, return_standing,set_tournament_info
+from swiss_gui.create_trf import create_tournament_report_file
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
 import json
 from swiss_gui.validation import validate_tournament_info
+
+import io
 
 # Create your views here.
 
@@ -117,6 +120,19 @@ def next_round(request):
         create_pairing()
         
     return HttpResponse(template.render(context,request))
+
+
+@login_required
+def douwnload_trf(request):
+    output_file = io.StringIO()
+    
+    trf = create_tournament_report_file()
+    output_file.write(trf)
+    
+    response = HttpResponse(output_file.getvalue(), content_type="text/plain")
+    response["Content-Disposition"] = "inline"
+    
+    return response
 
 
 @login_required
