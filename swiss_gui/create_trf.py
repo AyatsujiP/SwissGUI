@@ -16,6 +16,7 @@ def create_tournament_report_file():
     tournament_date = TournamentInfo.objects.get().date.strftime('%Y.%m.%d') if not TournamentInfo.objects.get().date.strftime('%Y.%m.%d') is None else ""
     round_num = Round.objects.get().round_no if not Round.objects.get().round_no is None else ""
     
+    players = ParticipatedPlayerList.objects.order_by('-rating','name').all()
     
     ret = ""
     trf_string["tournament_section"].append("012 "+ tournament_name)
@@ -38,14 +39,68 @@ def create_tournament_report_file():
     for i in range(0, player_section_column_length):
         column_ruler = column_ruler + (str((i+1) % 10))
         
-    trf_string["tournament_section"].append(column_ruler)
+    trf_string["player_section"].append(column_ruler)
     
     column_title = "DDD SSSS X TT NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN RRRR FFF IIIIIIIIIII BBBB/BB/BB PPPP RRRR"
     
     for i in range(0, round_num):
-        column_title = column_title + "  %s%s%s%s %s %s" % (round_num % 10,round_num % 10,round_num % 10,round_num % 10,round_num % 10,round_num % 10)
+        column_title = column_title + "  %s%s%s%s %s %s" % ((i+1) % 10,(i+1) % 10,(i+1) % 10,(i+1) % 10,(i+1) % 10,(i+1) % 10)
     
-    trf_string["tournament_section"].append(column_title)
+    trf_string["player_section"].append(column_title)
+    
+    for player in players:
+        player_string = "001 "
+        #startingrank number
+        player_string = player_string + str(player.pairing_no).rjust(4)
+        
+        player_string =padding(player_string)
+        
+        #Gender
+        player_string = player_string + " "
+        
+        player_string =padding(player_string)
+        
+        #Title
+        player_string = player_string + "  "
+        
+        player_string =padding(player_string)
+        
+        #Name
+        player_string = player_string + player.name.ljust(33)
+        
+        player_string =padding(player_string)
+        
+        #Rating
+        player_string = player_string + str(player.rating).rjust(4)
+
+        player_string =padding(player_string)
+        
+        #Federation        
+        player_string = player_string + "   "
+
+        player_string =padding(player_string)
+        
+        #FIDE number
+        player_string = player_string + "           "
+
+        player_string =padding(player_string)
+        
+        #Birthday
+        player_string = player_string + "xxxx/xx/xx"
+        
+        player_string =padding(player_string)
+        
+        #Points
+        player_string = player_string + ("%1.1f" % player.score).rjust(4)
+        
+        player_string =padding(player_string)
+        
+        #Points
+        player_string = player_string + ("%s" % player.rank).rjust(4)
+        
+        player_string =padding(player_string)
+                        
+        trf_string["player_section"].append(player_string)
     
     
     
@@ -53,9 +108,13 @@ def create_tournament_report_file():
     for t in trf_string["tournament_section"]:
         ret = ret + t + "\r\n"
         
-    ret = ret + "\r\n\r\n"
+    ret = ret + "\r\n"
     
     for t in trf_string["player_section"]:
         ret = ret + t + "\r\n"
         
     return ret
+
+
+def padding(player_string):
+    return player_string + " "

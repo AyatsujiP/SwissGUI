@@ -105,6 +105,12 @@ def return_standing():
     player_standing = CurrentRoundPlayerList.objects.order_by('-score','-tiebreak_score','pairing_no').all()
     for i,ps in enumerate(player_standing):
         ret["standing"].append({"ranking":i+1,"name":ps.name,"score":ps.score,"tiebreak_score":ps.tiebreak_score})
+        
+        player_to_register = ParticipatedPlayerList.objects.filter(name=ps.name).get()
+        player_to_register.rank = i+1
+        player_to_register.score = ps.score
+        player_to_register.save()
+        
     return ret
     
     
