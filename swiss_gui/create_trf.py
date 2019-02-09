@@ -14,7 +14,7 @@ def create_tournament_report_file():
     rated_player_num = ParticipatedPlayerList.objects.filter(rating__gt=0).count()
     tournament_name = TournamentInfo.objects.get().name if not TournamentInfo.objects.get().name is None else ""
     tournament_date = TournamentInfo.objects.get().date.strftime('%Y.%m.%d') if not TournamentInfo.objects.get().date.strftime('%Y.%m.%d') is None else ""
-    round_num = Round.objects.get().round_no if not Round.objects.get().round_no is None else ""
+    round_num = Round.objects.get().round_no - 1 if not Round.objects.get().round_no is None else ""
     
     players = ParticipatedPlayerList.objects.order_by('-rating','name').all()
     
@@ -34,7 +34,7 @@ def create_tournament_report_file():
     trf_string["tournament_section"].append("132 ")
     
     #Add column ruler
-    player_section_column_length = 100 + round_num * 10
+    player_section_column_length = 90 + round_num * 10
     column_ruler = ""
     for i in range(0, player_section_column_length):
         column_ruler = column_ruler + (str((i+1) % 10))
@@ -100,10 +100,39 @@ def create_tournament_report_file():
         
         player_string =padding(player_string)
                         
+        
+    
+        for i in range(0, round_num):
+            white_round = ResultsHistory.objects.filter(round=round_num,white_name=player.name)
+            black_round = ResultsHistory.objects.filter(round=round_num,black_name=player.name)
+
+            
+            if white_round.count() is not 0:
+                white_round_result = white_round.get()
+                opponent = str(white_round_result.black_no).rjust(4)
+                if int(white_round_result.white_result) == 1:
+                    result = "1"
+                elif int(white_round_result.white_result) == 0:
+                    result = "0"
+                else:
+                    result = "="
+                player_string = player_string +" %s %s %s " % (opponent, "w", result)
+                
+            elif black_round.count() is not 0:
+                black_round_result = black_round.get()
+                opponent = str(black_round_result.white_no).rjust(4)
+                if int(black_round_result.black_result) == 1:
+                    result = "1"
+                elif int(black_round_result.black_result) == 0:
+                    result = "0"
+                else:
+                    result = "="
+                player_string = player_string +" %s %s %s " % (opponent, "b", result)                
+            else:
+                player_string = player_string +" 0000 - F "
+                
         trf_string["player_section"].append(player_string)
-    
-    
-    
+        
     #Create String
     for t in trf_string["tournament_section"]:
         ret = ret + t + "\r\n"
