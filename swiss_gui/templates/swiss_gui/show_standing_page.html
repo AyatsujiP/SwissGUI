@@ -12,7 +12,6 @@
 				Round {{round}}:</p>
 			</h2>
 			<div class="ui segment">
-				<h3 class="ui header">Pairing:</h3>
 				<table class="ui celled table">
 					<thead>
 						<tr>
@@ -34,6 +33,11 @@
 						{%endfor%}
 					</tbody>
 				</table>
+				{% if tournament_end == 1 %}
+				<button class="ui button" onclick="location.href='/swiss_gui/download_trf/tournament_report_file.txt'">
+					Show Tournament Report File
+				</button>				
+				{% endif %}
 			</div>
 			{% if tournament_end == 1 %}
 			<div class="ui right aligned text container">

@@ -36,19 +36,20 @@ def create_with_playerlist(player_list):
     return fetch_from_initialplayerlist()
     
 
-def set_tournament_info(name, date, site, organizer):
+def set_tournament_info(name, start_date, end_date, site, organizer):
     TournamentInfo.objects.all().delete()
     
-    if not date:
-        q = TournamentInfo(name=name,
-                           date=None,
-                           site=site,
-                           organizer=organizer)
-    else:
-        q = TournamentInfo(name=name,
-                           date=date,
-                           site=site,
-                           organizer=organizer)        
+    if not start_date:
+        start_date=None
+    if not end_date:
+        end_date=None
+        
+
+    q = TournamentInfo(name=name,
+                       start_date=start_date,
+                       end_date=end_date,
+                       site=site,
+                       organizer=organizer)        
     
     q.save()
 
@@ -133,6 +134,21 @@ def return_history():
         ret["history"].append(round_results)
     return ret
 
+
+#巻き戻し
+def close_tournament():
+    round = Round.objects.all().get()
+
+    tournament_info = TournamentInfo.objects.all().get()
+    
+    if not tournament_info.is_finished:
+        round.round_no = round.round_no - 1
+        tournament_info.is_finished = True
+    round.save()
+    tournament_info.save()
+
+def check_finished():
+    return TournamentInfo.objects.all().get().is_finished
 
 def return_names():
     return {"names": list(InitialPlayerList.objects.values_list('name',flat=True))}

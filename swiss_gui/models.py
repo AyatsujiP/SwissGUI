@@ -19,9 +19,11 @@ class ParticipatedPlayerList(models.Model):
     
 class TournamentInfo(models.Model):
     name = models.CharField(max_length=200, null=True)
-    date = models.DateField(null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
     site = models.CharField(max_length=200, null=True)
     organizer = models.CharField(max_length=200, null=True)
+    is_finished = models.BooleanField(default=False)
 
 class CurrentRoundPlayerList(models.Model):
     name = models.CharField(max_length=200)
