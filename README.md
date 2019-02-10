@@ -1,4 +1,4 @@
-# Sugared Swiss Tournament Organizer V1.1.0
+# Sugared Swiss Tournament Organizer V1.1.1
 
 
 ## 説明
@@ -6,6 +6,7 @@
 - 以下のパッケージに依存する。これらはpipからインストールできるため、インストール手順は省略する。
     + swissdutch
     + django
+    + psycopg2
 - Windows 10, およびLinux(Lubuntu 16.04)で動作を確認している。
 
 ## Dockerを使わないインストール方法
@@ -104,4 +105,6 @@ dockerディレクトリ配下にあるDockerfileと、supervisord.confを、デ
  - 2019/2/10 Ver1.1.0公開
       + ライセンス表記追加(MIT)
     + TRFファイル出力対応
-     + ボード番号出力に対応 
+     + ボード番号出力に対応
+ - 2019/2/10 Ver1.1.1公開
+     + ディレクトリを整理
