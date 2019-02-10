@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
+{%block script%}
+<script>
+		function startTournament(){
+			if (window.confirm('Do you really want to start the tournament? All previous tournament data will be deleted.')){
+				location.href='/swiss_gui/start_tournament';
+			}
+		}
+</script>
+{%endblock%}
+
 {% block content %}
 			<h2 class="ui header">
 				Create New Tournament:</p>
@@ -25,7 +35,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="ui center aligned text container" onclick="location.href='/swiss_gui/start_tournament'">
+			<div class="ui center aligned text container" onclick="startTournament();">
 				<button class="ui primary button">
 					Start Tournament
 				</button>

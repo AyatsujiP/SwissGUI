@@ -27,23 +27,26 @@ def index_redirect(request):
 #トーナメントを作る
 @login_required
 def create_tournament(request):
-    template = loader.get_template('swiss_gui/create_tournament.html')
-    tournament_info = json.loads(request.POST["playerList"])
-    
-    is_validated = validate_tournament_info(tournament_info)
-    
-    if is_validated:
-        set_tournament_info(tournament_info["tournamentName"],
-                            tournament_info["tournamentStartDate"],
-                            tournament_info["tournamentEndDate"],
-                            tournament_info["tournamentSite"],
-                            tournament_info["tournamentOrganizer"])
-    
-        context = create_with_playerlist(tournament_info)
-    
-        return HttpResponse(template.render(context,request))
+    if request.method == "POST":
+        template = loader.get_template('swiss_gui/create_tournament.html')
+        tournament_info = json.loads(request.POST["playerList"])
+        
+        is_validated = validate_tournament_info(tournament_info)
+        
+        if is_validated:
+            set_tournament_info(tournament_info["tournamentName"],
+                                tournament_info["tournamentStartDate"],
+                                tournament_info["tournamentEndDate"],
+                                tournament_info["tournamentSite"],
+                                tournament_info["tournamentOrganizer"])
+        
+            context = create_with_playerlist(tournament_info)
+        
+            return HttpResponse(template.render(context,request))
+        else:
+            return TemplateResponse(request,'swiss_gui/register_error.html')
     else:
-        return TemplateResponse(request,'swiss_gui/register_error.html')
+        return TemplateResponse(request,'swiss_gui/errors/405.html')
 
 @login_required
 def register_user(request):
