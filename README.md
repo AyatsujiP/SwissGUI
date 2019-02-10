@@ -1,4 +1,4 @@
-# Sugared Swiss Tournament Organizer V1.0.0
+# Sugared Swiss Tournament Organizer V1.1.0
 
 
 ## 説明
@@ -98,3 +98,9 @@ dockerディレクトリ配下にあるDockerfileと、supervisord.confを、デ
       </Directory>
 ~~~
 
+## リリースノート
+ - 2019/1/31 Ver1.0.0公開
+ - 2019/2/10 Ver1.1.0公開
+      + ライセンス表記追加(MIT)
+    + TRFファイル出力対応
+     + ボード番号出力に対応 
