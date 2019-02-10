@@ -44,7 +44,7 @@ def create_tournament(request):
         
             return HttpResponse(template.render(context,request))
         else:
-            return TemplateResponse(request,'swiss_gui/register_error.html')
+            return TemplateResponse(request,'swiss_gui/errors/register_error.html')
     else:
         return TemplateResponse(request,'swiss_gui/errors/405.html')
 
@@ -57,7 +57,7 @@ def register_user(request):
 
 @login_required
 def register_error(request):
-    return TemplateResponse(request,'swiss_gui/register_error.html')
+    return TemplateResponse(request,'swiss_gui/errors/register_error.html')
 
 
 #プレーヤーが確定した後に、トーナメントを開始する
@@ -141,7 +141,7 @@ def douwnload_trf(request):
         return response
     
     else:
-        return TemplateResponse(request,'swiss_gui/trf_is_not_created.html')
+        return TemplateResponse(request,'swiss_gui/errors/trf_is_not_created.html')
 
 
 @login_required
