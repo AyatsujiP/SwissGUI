@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'swiss_gui/show_history_page/', views.show_history_page,name='show_history_page'),
     url(r'swiss_gui/submit_result/', views.submit_result,name='submit_result'),
     url(r'swiss_gui/next_round/', views.next_round,name='next_round'),
+    url(r'swiss_gui/download_trf/tournament_report_file.txt', views.douwnload_trf,name='download_trf'),
     url(r'swiss_gui/end_tournament/', views.end_tournament,name='end_tournament'),
     
 ]

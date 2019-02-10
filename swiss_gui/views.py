@@ -3,11 +3,14 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing 
-from swiss_gui.db_controller import return_names,return_history, return_standing,set_tournament_info
+from swiss_gui.db_controller import fetch_from_initialplayerlist, create_with_playerlist, return_pairing, check_finished
+from swiss_gui.db_controller import return_names,return_history, return_standing,set_tournament_info, close_tournament
+from swiss_gui.create_trf import create_tournament_report_file
 from swiss_gui.swiss_engine import create_initial_players, create_pairing, report_results, update_round
 import json
 from swiss_gui.validation import validate_tournament_info
+
+import io
 
 # Create your views here.
 
@@ -24,22 +27,26 @@ def index_redirect(request):
 #トーナメントを作る
 @login_required
 def create_tournament(request):
-    template = loader.get_template('swiss_gui/create_tournament.html')
-    tournament_info = json.loads(request.POST["playerList"])
-    
-    is_validated = validate_tournament_info(tournament_info)
-    
-    if is_validated:
-        set_tournament_info(tournament_info["tournamentName"],
-                            tournament_info["tournamentDate"],
-                            tournament_info["tournamentSite"],
-                            tournament_info["tournamentOrganizer"])
-    
-        context = create_with_playerlist(tournament_info)
-    
-        return HttpResponse(template.render(context,request))
+    if request.method == "POST":
+        template = loader.get_template('swiss_gui/create_tournament.html')
+        tournament_info = json.loads(request.POST["playerList"])
+        
+        is_validated = validate_tournament_info(tournament_info)
+        
+        if is_validated:
+            set_tournament_info(tournament_info["tournamentName"],
+                                tournament_info["tournamentStartDate"],
+                                tournament_info["tournamentEndDate"],
+                                tournament_info["tournamentSite"],
+                                tournament_info["tournamentOrganizer"])
+        
+            context = create_with_playerlist(tournament_info)
+        
+            return HttpResponse(template.render(context,request))
+        else:
+            return TemplateResponse(request,'swiss_gui/register_error.html')
     else:
-        return TemplateResponse(request,'swiss_gui/register_error.html')
+        return TemplateResponse(request,'swiss_gui/errors/405.html')
 
 @login_required
 def register_user(request):
@@ -120,9 +127,29 @@ def next_round(request):
 
 
 @login_required
+def douwnload_trf(request):
+    is_finished = check_finished()
+    if is_finished is True:
+        output_file = io.StringIO()
+        
+        trf = create_tournament_report_file()
+        output_file.write(trf)
+        
+        response = HttpResponse(output_file.getvalue(), content_type="text/plain")
+        response["Content-Disposition"] = "inline"
+        
+        return response
+    
+    else:
+        return TemplateResponse(request,'swiss_gui/trf_is_not_created.html')
+
+
+@login_required
 def end_tournament(request):
     template = loader.get_template('swiss_gui/show_standing_page.html')
     update_round()
+    close_tournament()
+    
     context = return_standing()
     context["round"] = "Finished"
     context["tournament_end"] = 1

@@ -30,11 +30,18 @@
 	        }
 			
 	        array['tournamentName'] = document.getElementById("TournamentName").value;
-	        if(typeof calendarDate !== "undefined"){
-		        array['tournamentDate'] = calendarDate;
+	        
+	        if(typeof calendarStartDate !== "undefined"){
+		        array['tournamentStartDate'] = calendarStartDate;
 	        }else{
-	        	array['tournamentDate'] = '';
+	        	array['tournamentStartDate'] = '';
 	        }
+	        if(typeof calendarEndDate !== "undefined"){
+		        array['tournamentEndDate'] = calendarEndDate;
+	        }else{
+	        	array['tournamentEndDate'] = '';
+	        }
+	        
 	        array['tournamentSite'] = document.getElementById("TournamentSite").value;
 	        array['tournamentOrganizer'] = document.getElementById("TournamentOrganizer").value;
 	        
@@ -85,9 +92,20 @@
 					<td><div class="ui input"><input id="TournamentName" type="text" placeholder="Enter name..."></div></td>
 				</tr>
 				<tr>
-					<td>Tournament Date</td>
+					<td>Tournament Start Date</td>
 					<td>
-						<div class="field ui calendar required" id="TournamentDatePicker">
+						<div class="field ui calendar required" id="TournamentStartDatePicker">
+							<div class="ui input left icon">
+    							<i class="calendar icon"></i>
+    							<input type="text" name="date" placeholder="Enter Date...">
+  							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Tournament End Date</td>
+					<td>
+						<div class="field ui calendar required" id="TournamentEndDatePicker">
 							<div class="ui input left icon">
     							<i class="calendar icon"></i>
     							<input type="text" name="date" placeholder="Enter Date...">
@@ -138,11 +156,12 @@
 
 {% block bottomscript %}
 <script>
-	var calendarDate = '';
-	$('#TournamentDatePicker').calendar(
+	var calendarStartDate = '';
+	var calendarEndDate = '';
+	$('#TournamentStartDatePicker').calendar(
 	{type: 'date',
 	onChange: function (date, text) {
-	     calendarDate = text;
+	     calendarStartDate = text;
 	  },
 	  formatter: {
 		    date: function (date) {
@@ -152,5 +171,18 @@
 		      return year + '-' + month + '-' + day;
 		    }
 		  }});
+	$('#TournamentEndDatePicker').calendar(
+			{type: 'date',
+			onChange: function (date, text) {
+			     calendarEndDate = text;
+			  },
+			  formatter: {
+				    date: function (date) {
+				      var day = ('0' + date.getDate()).slice(-2);
+				      var month = ('0' + (date.getMonth() + 1)).slice(-2);
+				      var year = date.getFullYear();
+				      return year + '-' + month + '-' + day;
+				    }
+				  }});
 </script>
 {% endblock %}
