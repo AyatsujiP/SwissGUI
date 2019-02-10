@@ -34,9 +34,11 @@ class CurrentRoundPlayerList(models.Model):
     opponents = ArrayField(models.IntegerField(),null=True)
     colour_hist = ArrayField(models.IntegerField(),null=True)
     tiebreak_score = models.FloatField(null=True)
+    board_number = ArrayField(models.IntegerField(),null=True)
     
 class Round(models.Model):
     round_no = models.IntegerField()
+    is_finished_board_order = models.BooleanField(default=False)
     
 class PooledResults(models.Model):
     name = models.CharField(max_length=200)

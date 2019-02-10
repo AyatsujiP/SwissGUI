@@ -188,6 +188,8 @@ def update_round():
     if len(PooledResults.objects.all()) is len(CurrentRoundPlayerList.objects.all()):
         round = Round.objects.get()
         round.round_no += 1
+        round.is_finished_board_order = False
+        
         PooledResults.objects.all().delete()
         round.save()
         

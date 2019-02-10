@@ -20,36 +20,38 @@
 			<h2 class="ui header">
 				Round {{round}}:</p>
 			</h2>
-			<div class="ui segment">
+
 				<h3 class="ui header">Pairing:</h3>
-			<table class="ui celled table">
-				<thead>
-					<tr>
-						<th>player ID</th>
-						<th>White</th>
-						<th></th>
-						<th>Score</th>
-						<th></th>
-						<th>Player ID</th>
-						<th>Black</th>
-					</tr>
-				</thead>
-				
-				<tbody>
-					{%for pl in pairing_list %}
+				<table class="ui celled table">
+					<thead>
 						<tr>
-							<td data-label="white_player ID">{{pl.white_no}}</td>
-							<td data-label="white_name">{{pl.white_name}}</td>
-							<td data-label="white_score">{{pl.white_score}}</td>
-							<td></td>
-							<td data-label="black_score">{{pl.black_score}}</td>
-							<td data-label="black_player_ID">{{pl.black_no}}</td>
-							<td data-label="black_name">{{pl.black_name}}</td>
+							<th>Board</th>
+							<th>player ID</th>
+							<th>White</th>
+							<th></th>
+							<th>Score</th>
+							<th></th>
+							<th>Player ID</th>
+							<th>Black</th>
 						</tr>
-					{%endfor%}
-				</tbody>
-			</table>
-			</div>
+					</thead>
+					
+					<tbody>
+						{%for pl in pairing_list %}
+							<tr>
+								<td data-label="board_number">{{pl.board_number}}</td>
+								<td data-label="white_player ID">{{pl.white_no}}</td>
+								<td data-label="white_name">{{pl.white_name}}</td>
+								<td data-label="white_score">{{pl.white_score}}</td>
+								<td></td>
+								<td data-label="black_score">{{pl.black_score}}</td>
+								<td data-label="black_player_ID">{{pl.black_no}}</td>
+								<td data-label="black_name">{{pl.black_name}}</td>
+							</tr>
+						{%endfor%}
+					</tbody>
+				</table>
+
 			<div class="ui right aligned text container" onclick="location.href='/swiss_gui/next_round'">
 				<button class="ui primary button">
 					Go to Next Round
